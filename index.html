@@ -124,13 +124,24 @@
       "you know he’s watching",
       "",
       "",
-      "you’re stuck in the same loop."
+      "you’re stuck in the same loop.",
+      "",
+      "it’s not going to stop.",
+      "",
+      "",
+      "you’re still here?",
+      "",
+      "",
+      "something followed you back."
     ];
 
     const glitchTag = document.getElementById('glitchTag');
     if (visitCount > 1) {
       let index = visitCount - 2;
-      if (visitCount >= 8) index = 6;
+      if (visitCount >= 20) index = 14;
+      else if (visitCount >= 14) index = 13;
+      else if (visitCount >= 12) index = 11;
+      else if (visitCount >= 8) index = 8;
       else index = Math.min(index, glitchMessages.length - 1);
       glitchTag.textContent = glitchMessages[index];
       show('glitchTag');
