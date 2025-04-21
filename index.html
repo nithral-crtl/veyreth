@@ -18,7 +18,7 @@
       overflow: hidden;
       flex-direction: column;
     }
-    .text {
+    .text, .btc-pay, .memory-glitch {
       position: absolute;
       display: none;
       text-align: center;
@@ -57,6 +57,28 @@
       background: #a00;
       color: #fff;
     }
+    .btc-pay {
+      color: #c00;
+      font-size: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    code {
+      color: #ccc;
+      font-size: 14px;
+    }
+    .memory-glitch {
+      top: 10%;
+      font-size: 12px;
+      color: #900;
+      opacity: 0;
+      animation: glitchPulse 0.8s ease-out 1;
+    }
+    @keyframes glitchPulse {
+      0% { opacity: 0; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0; transform: scale(0.95); }
+    }
   </style>
 </head>
 <body>
@@ -65,44 +87,77 @@
   <div class="text" id="line3">recursion has already begun.</div>
 
   <div class="button-container" id="buttonContainer">
-    <button class="activate-button" onclick="window.location.href='gate.html'">proceed</button>
+    <button class="activate-button" id="proceedButton">proceed</button>
   </div>
 
+  <div class="btc-pay" id="btcContainer">
+    Send exactly 0.00067 BTC to:
+
+    <code>bc1qgvq3ndam43uk2hf0chdp4chs5yq2hc24dtpsgr</code>
+
+    No confirmation will follow.
+    No return is guaranteed.
+
+    You proceed — or you don’t.
+  </div>
+
+  <div class="memory-glitch" id="glitchTag"></div>
+
   <script>
-    setTimeout(() => {
-      document.getElementById('line1').style.display = 'block';
-    }, 500);
+    function show(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'block';
+    }
 
-    setTimeout(() => {
-      document.getElementById('line1').style.display = 'none';
-    }, 15500);
+    function hide(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    }
 
-    setTimeout(() => {
-      document.getElementById('line2').style.display = 'block';
-    }, 16000);
+    const visitCount = parseInt(localStorage.getItem('veyrethVisits') || '0') + 1;
+    localStorage.setItem('veyrethVisits', visitCount);
 
-    setTimeout(() => {
-      document.getElementById('markedWord').style.color = '#f00';
-    }, 29500);
+    const glitchMessages = [
+      "you’ve been here before",
+      "you’re still stuck?",
+      "why do you hesitate?",
+      "you know he’s watching",
+      "",
+      "",
+      "you’re stuck in the same loop."
+    ];
 
-    setTimeout(() => {
-      document.getElementById('line2').style.display = 'none';
-    }, 31000);
+    const glitchTag = document.getElementById('glitchTag');
+    if (visitCount > 1) {
+      let index = visitCount - 2;
+      if (visitCount >= 8) index = 6;
+      else index = Math.min(index, glitchMessages.length - 1);
+      glitchTag.textContent = glitchMessages[index];
+      show('glitchTag');
+    }
 
+    setTimeout(() => { show('line1'); }, 500);
+    setTimeout(() => { hide('line1'); }, 15500);
+    setTimeout(() => { show('line2'); }, 16000);
+    setTimeout(() => { document.getElementById('markedWord').style.color = '#f00'; }, 29500);
+    setTimeout(() => { hide('line2'); }, 31000);
     setTimeout(() => {
       const line3 = document.getElementById('line3');
-      line3.style.display = 'block';
+      show('line3');
       line3.style.color = '#c00';
       line3.classList.add('shake');
     }, 31500);
-
     setTimeout(() => {
       const button = document.getElementById('buttonContainer');
       button.style.display = 'flex';
-      setTimeout(() => {
-        button.style.opacity = 1;
-      }, 100);
+      setTimeout(() => { button.style.opacity = 1; }, 100);
     }, 32000);
+
+    document.getElementById('proceedButton').addEventListener('click', () => {
+      hide('buttonContainer');
+      hide('line3');
+      show('btcContainer');
+    });
   </script>
 </body>
 </html>
