@@ -34,6 +34,32 @@
       75% { transform: translateX(-1px); }
       100% { transform: translateX(0); }
     }
+    .glitch {
+      animation: glitchEffect 1.5s infinite;
+    }
+    @keyframes glitchEffect {
+      0% { text-shadow: 1px 0 red, -1px 0 blue; }
+      25% { text-shadow: -1px -1px red, 1px 1px blue; }
+      50% { text-shadow: 1px 1px red, -1px -1px blue; }
+      75% { text-shadow: -2px 0 red, 2px 0 blue; }
+      100% { text-shadow: 1px -1px red, -1px 1px blue; }
+    }
+    .fall-apart {
+      animation: fallApart 0.8s infinite;
+    }
+    @keyframes fallApart {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  20% { opacity: 0.9; transform: translate(-1px, 2px) rotate(-1deg) scale(1.01); }
+  40% { opacity: 0.7; transform: translate(2px, -3px) rotate(2deg) scale(0.98); }
+  60% { opacity: 0.5; transform: translate(-3px, 4px) rotate(-3deg) scale(1.03); }
+  80% { opacity: 0.3; transform: translate(4px, -2px) rotate(4deg) scale(0.95); }
+  100% { opacity: 0.1; transform: translate(-5px, 5px) rotate(-5deg) scale(1.05); }
+}
+      25% { opacity: 0.8; transform: translateY(1px) scale(0.98); }
+      50% { opacity: 0.6; transform: translateY(-1px) scale(1.02); }
+      75% { opacity: 0.4; transform: translateY(2px) scale(0.96); }
+      100% { opacity: 0.3; transform: translateY(-2px) scale(1.04); }
+    }
     .button-container {
       display: none;
       flex-direction: column;
@@ -79,7 +105,38 @@
       50% { opacity: 1; transform: scale(1.1); }
       100% { opacity: 0; transform: scale(0.95); }
     }
-  </style>
+  .invisible-hover {
+  background: #000;
+  color: #000;
+  border: none;
+  animation: flicker 1.5s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.6; }
+}
+.hidden-clickable {
+  background: transparent !important;
+  border: none !important;
+  color: transparent !important;
+  opacity: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.invisible-clickzone {
+  background: transparent !important;
+  color: transparent !important;
+  border: none !important;
+  opacity: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  width: 200px !important;
+  height: 50px !important;
+  pointer-events: auto !important;
+  display: inline-block !important;
+}
+</style>
 </head>
 <body>
   <div class="text" id="line1">you’re stuck, aren’t you...</div>
@@ -87,7 +144,7 @@
   <div class="text" id="line3">recursion has already begun.</div>
 
   <div class="button-container" id="buttonContainer">
-    <button class="activate-button" id="proceedButton">proceed</button>
+    <button class="activate-button" id="proceedButton"><span id="proceedText" class="glitch">proceed</span></button>
   </div>
 
   <div class="btc-pay" id="btcContainer">
@@ -132,7 +189,7 @@
       "you’re still here?",
       "",
       "",
-      "something followed you back."
+      ""
     ];
 
     const glitchTag = document.getElementById('glitchTag');
@@ -143,26 +200,65 @@
       else if (visitCount >= 12) index = 11;
       else if (visitCount >= 8) index = 8;
       else index = Math.min(index, glitchMessages.length - 1);
+
       glitchTag.textContent = glitchMessages[index];
-      show('glitchTag');
+
+      if (visitCount <= 20) {
+        show('glitchTag');
+      } else if (visitCount >= 21) {
+        show('glitchTag');
+        glitchTag.classList.add('glitch');
+      }
     }
 
-    setTimeout(() => { show('line1'); }, 500);
-    setTimeout(() => { hide('line1'); }, 15500);
-    setTimeout(() => { show('line2'); }, 16000);
-    setTimeout(() => { document.getElementById('markedWord').style.color = '#f00'; }, 29500);
-    setTimeout(() => { hide('line2'); }, 31000);
     setTimeout(() => {
-      const line3 = document.getElementById('line3');
-      show('line3');
-      line3.style.color = '#c00';
-      line3.classList.add('shake');
-    }, 31500);
+  if (visitCount < 25) {
+    show('line1');
+    if (visitCount >= 21) document.getElementById('line1').classList.add('glitch');
+  }
+}, 500);
+setTimeout(() => {
+  if (visitCount < 25) hide('line1');
+}, 15500);
+
     setTimeout(() => {
-      const button = document.getElementById('buttonContainer');
-      button.style.display = 'flex';
-      setTimeout(() => { button.style.opacity = 1; }, 100);
-    }, 32000);
+  if (visitCount < 25) {
+    show('line2');
+    if (visitCount >= 21) document.getElementById('line2').classList.add('glitch');
+  }
+}, 16000);
+setTimeout(() => {
+  if (visitCount < 25) hide('line2');
+}, 31000);
+
+    setTimeout(() => {
+  if (visitCount < 25) {
+    const line3 = document.getElementById('line3');
+    show('line3');
+    line3.style.color = '#c00';
+    line3.classList.add('shake');
+    if (visitCount >= 21) line3.classList.add('glitch');
+  }
+}, 31500);
+
+    setTimeout(() => {
+  const button = document.getElementById('buttonContainer');
+  if (visitCount >= 30) {
+  const proceedBtn = document.getElementById('proceedButton');
+  const proceedText = document.getElementById('proceedText');
+  proceedBtn.className = 'invisible-clickzone';
+  proceedText.style.display = 'none';
+  button.style.display = 'flex';
+  button.style.opacity = 1;
+} else if (visitCount >= 25) {
+  const proceedBtn = document.getElementById('proceedButton');
+  const proceedText = document.getElementById('proceedText');
+  proceedBtn.classList.add('invisible-hover');
+} else if (visitCount < 25) {
+    button.style.display = 'flex';
+    setTimeout(() => { button.style.opacity = 1; }, 100);
+  }
+}, 32000);
 
     document.getElementById('proceedButton').addEventListener('click', () => {
       hide('buttonContainer');
