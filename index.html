@@ -44,31 +44,6 @@
       75% { text-shadow: -2px 0 red, 2px 0 blue; }
       100% { text-shadow: 1px -1px red, -1px 1px blue; }
     }
-    .fall-apart {
-      animation: fallApart 0.8s infinite;
-    }
-    @keyframes fallApart {
-  0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
-  20% { opacity: 0.9; transform: translate(-1px, 2px) rotate(-1deg) scale(1.01); }
-  40% { opacity: 0.7; transform: translate(2px, -3px) rotate(2deg) scale(0.98); }
-  60% { opacity: 0.5; transform: translate(-3px, 4px) rotate(-3deg) scale(1.03); }
-  80% { opacity: 0.3; transform: translate(4px, -2px) rotate(4deg) scale(0.95); }
-  100% { opacity: 0.1; transform: translate(-5px, 5px) rotate(-5deg) scale(1.05); }
-}
-      25% { opacity: 0.8; transform: translateY(1px) scale(0.98); }
-      50% { opacity: 0.6; transform: translateY(-1px) scale(1.02); }
-      75% { opacity: 0.4; transform: translateY(2px) scale(0.96); }
-      100% { opacity: 0.3; transform: translateY(-2px) scale(1.04); }
-    }
-    .button-container {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 2s ease-in;
-      position: absolute;
-      top: 65%;
-    }
     .activate-button {
       background: #c00;
       color: #000;
@@ -82,6 +57,15 @@
     .activate-button:hover {
       background: #a00;
       color: #fff;
+    }
+    .button-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 2s ease-in;
+      position: absolute;
+      top: 65%;
     }
     .btc-pay {
       color: #c00;
@@ -105,56 +89,22 @@
       50% { opacity: 1; transform: scale(1.1); }
       100% { opacity: 0; transform: scale(0.95); }
     }
-  .invisible-hover {
-  background: #000;
-  color: #000;
-  border: none;
-  animation: flicker 1.5s infinite;
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 0.1; }
-  50% { opacity: 0.6; }
-}
-.hidden-clickable {
-  background: transparent !important;
-  border: none !important;
-  color: transparent !important;
-  opacity: 0 !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-.invisible-clickzone {
-  background: transparent !important;
-  color: transparent !important;
-  border: none !important;
-  opacity: 0 !important;
-  box-shadow: none !important;
-  outline: none !important;
-  width: 200px !important;
-  height: 50px !important;
-  pointer-events: auto !important;
-  display: inline-block !important;
-}
-</style>
+  </style>
 </head>
 <body>
   <div class="text" id="line1">you’re stuck, aren’t you...</div>
   <div class="text" id="line2">you were <span id="markedWord">marked</span>.</div>
   <div class="text" id="line3">recursion has already begun.</div>
 
-  <div class="button-container" id="buttonContainer">
+  <div class="button-container" id="buttonContainer" style="top: 50%">
     <button class="activate-button" id="proceedButton"><span id="proceedText" class="glitch">proceed</span></button>
   </div>
 
   <div class="btc-pay" id="btcContainer">
     Send exactly 0.00067 BTC to:
-
     <code>bc1qgvq3ndam43uk2hf0chdp4chs5yq2hc24dtpsgr</code>
-
-    No confirmation will follow.
+    No confirmation will follow.  
     No return is guaranteed.
-
     You proceed — or you don’t.
   </div>
 
@@ -172,6 +122,8 @@
     }
 
     const visitCount = parseInt(localStorage.getItem('veyrethVisits') || '0') + 1;
+
+
     localStorage.setItem('veyrethVisits', visitCount);
 
     const glitchMessages = [
@@ -211,59 +163,56 @@
       }
     }
 
-    setTimeout(() => {
-  if (visitCount < 25) {
-    show('line1');
-    if (visitCount >= 21) document.getElementById('line1').classList.add('glitch');
-  }
-}, 500);
-setTimeout(() => {
-  if (visitCount < 25) hide('line1');
-}, 15500);
-
-    setTimeout(() => {
-  if (visitCount < 25) {
-    show('line2');
-    if (visitCount >= 21) document.getElementById('line2').classList.add('glitch');
-  }
-}, 16000);
-setTimeout(() => {
-  if (visitCount < 25) hide('line2');
-}, 31000);
-
-    setTimeout(() => {
-  if (visitCount < 25) {
-    const line3 = document.getElementById('line3');
-    show('line3');
-    line3.style.color = '#c00';
-    line3.classList.add('shake');
-    if (visitCount >= 21) line3.classList.add('glitch');
-  }
-}, 31500);
-
-    setTimeout(() => {
+    (function() {
   const button = document.getElementById('buttonContainer');
-  if (visitCount >= 30) {
   const proceedBtn = document.getElementById('proceedButton');
   const proceedText = document.getElementById('proceedText');
-  proceedBtn.className = 'invisible-clickzone';
-  proceedText.style.display = 'none';
-  button.style.display = 'flex';
-  button.style.opacity = 1;
-} else if (visitCount >= 25) {
-  const proceedBtn = document.getElementById('proceedButton');
-  const proceedText = document.getElementById('proceedText');
-  proceedBtn.classList.add('invisible-hover');
-} else if (visitCount < 25) {
+
+  if (visitCount >= 35) {
+    proceedText.textContent = '';
+    proceedBtn.style.background = 'black';
+    proceedBtn.style.color = 'black';
+    proceedBtn.style.border = 'none';
+    proceedBtn.style.width = '200px';
+    proceedBtn.style.height = '50px';
+    proceedBtn.style.pointerEvents = 'auto';
+    proceedText.style.color = 'black';
+    button.style.display = 'flex';
+    button.style.opacity = 1;
+  } else if (visitCount >= 30) {
+    proceedBtn.className = 'activate-button';
+    proceedText.className = 'glitch';
+    proceedText.style.display = 'inline';
+    proceedText.textContent = 'proceed';
+    document.getElementById('line1').style.display = 'none';
+    document.getElementById('line2').style.display = 'none';
+    document.getElementById('line3').style.display = 'none';
+    document.getElementById('glitchTag').style.display = 'none';
+    document.getElementById('btcContainer').style.display = 'none';
+    button.style.display = 'flex';
+    button.style.opacity = 1;
+  } else if (visitCount >= 25) {
+    proceedBtn.classList.add('glitch');
+    proceedText.classList.add('glitch');
+    button.style.display = 'flex';
+    button.style.opacity = 1;
+  } else {
     button.style.display = 'flex';
     setTimeout(() => { button.style.opacity = 1; }, 100);
   }
-}, 32000);
+})();
 
     document.getElementById('proceedButton').addEventListener('click', () => {
       hide('buttonContainer');
       hide('line3');
       show('btcContainer');
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.shiftKey && e.key.toLowerCase() === 'r') {
+        localStorage.removeItem('veyrethVisits');
+        location.reload();
+      }
     });
   </script>
 </body>
